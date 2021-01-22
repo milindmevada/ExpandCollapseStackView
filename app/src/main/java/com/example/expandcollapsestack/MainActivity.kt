@@ -31,6 +31,9 @@ class MainActivity : AppCompatActivity() {
                 .inflate(R.layout.expanded_view, parent, false)
             view.tvExpanded.text = "Expanded $index"
             view.tvCollapsed.text = "Collapsed $index"
+            view.setOnClickListener {
+                stackView.expandViewAt(index)
+            }
             return view
         }
 

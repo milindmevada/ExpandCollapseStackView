@@ -52,7 +52,8 @@ class SpacedStackView : FrameLayout {
     var currentIndex = 0
 
     private fun initView() {
-        llStack.addView(mAdapter?.onBindView(this, 0))
+        val view = mAdapter?.onBindView(this, 0)
+        llStack.addView(view)
         val ctaView = mAdapter?.onBindCTA(this, 0)
         flCTA.addView(ctaView)
     }
@@ -92,6 +93,41 @@ class SpacedStackView : FrameLayout {
 
     private fun decreaseHeight(view: View) {
         val anim = ValueAnimator.ofInt(view.height, dpToPx(context, 100))
+        anim.addUpdateListener { valueAnimator ->
+            val `val` = valueAnimator.animatedValue as Int
+            val layoutParams: ViewGroup.LayoutParams = view.layoutParams
+            layoutParams.height = `val`
+            view.layoutParams = layoutParams
+        }
+        anim.duration = 500
+        anim.start()
+    }
+
+    fun expandViewAt(index: Int) {
+        if (currentIndex == index) {
+            return
+        }
+        currentIndex = index
+        val totalSize = mAdapter?.getItemCount() ?: 0
+        for (i in index + 1 until totalSize) {
+            try {
+                llStack.removeViewAt(i)
+                invalidate()
+            } catch (ex: Exception) {
+            }
+        }
+        increaseHeight(llStack.getChildAt(index))
+        animatedViewSwitcher(
+            view = flCTA,
+            intermediateOperation = {
+                flCTA.removeAllViews()
+                flCTA.addView(mAdapter?.onBindCTA(this, currentIndex))
+            },
+        )
+    }
+
+    private fun increaseHeight(view: View) {
+        val anim = ValueAnimator.ofInt(dpToPx(context, 100), (view.parent as View).height)
         anim.addUpdateListener { valueAnimator ->
             val `val` = valueAnimator.animatedValue as Int
             val layoutParams: ViewGroup.LayoutParams = view.layoutParams
