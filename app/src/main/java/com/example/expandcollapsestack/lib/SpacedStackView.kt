@@ -103,6 +103,7 @@ class SpacedStackView : FrameLayout {
         anim.start()
     }
 
+    //TODO: Fix the issue to expand view for when middle item in tapped
     fun expandViewAt(index: Int) {
         if (currentIndex == index) {
             return

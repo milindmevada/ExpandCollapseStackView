@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
             view.tvExpanded.text = "Expanded $index"
             view.tvCollapsed.text = "Collapsed $index"
             view.setOnClickListener {
-                stackView.expandViewAt(index)
+                //stackView.expandViewAt(index)
             }
             return view
         }
